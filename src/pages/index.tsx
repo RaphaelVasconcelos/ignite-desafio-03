@@ -1,4 +1,7 @@
 import { GetStaticProps } from 'next';
+import Head from 'next/head';
+import {AiOutlineCalendar} from 'react-icons/ai'
+import {FiUser} from 'react-icons/fi';
 
 import { getPrismicClient } from '../services/prismic';
 
@@ -24,9 +27,47 @@ interface HomeProps {
   postsPagination: PostPagination;
 }
 
-// export default function Home() {
-//   // TODO
-// }
+export default function Home() {
+  return (
+    <>
+      <Head>
+        <title>Posts</title>
+      </Head>
+      <main className={commonStyles.container}>
+        <img className={commonStyles.logo} src="/images/Logo.svg" alt="logo" />
+        <div className={styles.post}>
+          <header className={styles.title}>Como Utilizar Hooks</header>
+          <p className={styles.subtitle}>
+            Pensando em sincronização em ciclos de vida
+          </p>
+          <div className={styles.info}>
+            <span><AiOutlineCalendar/>Data</span><span><FiUser/>Author</span>
+          </div>
+        </div>
+        <div className={styles.post}>
+          <header className={styles.title}>Como Utilizar Hooks</header>
+          <p className={styles.subtitle}>
+            Pensando em sincronização em ciclos de vida
+          </p>
+          <div className={styles.info}>
+            <span><AiOutlineCalendar/>Data</span><span><FiUser/>Author</span>
+          </div>
+        </div>
+        <div className={styles.post}>
+          <header className={styles.title}>Como Utilizar Hooks</header>
+          <p className={styles.subtitle}>
+            Pensando em sincronização em ciclos de vida
+          </p>
+          <div className={styles.info}>
+            <span><AiOutlineCalendar/>Data</span><span><FiUser/>Author</span>
+          </div>
+        </div>
+
+        <a className={styles.loadMore}>Carregar mais posts</a>
+      </main>
+    </>
+  );
+}
 
 // export const getStaticProps = async () => {
 //   // const prismic = getPrismicClient();
