@@ -1,12 +1,16 @@
 import { GetStaticProps } from 'next';
 import Head from 'next/head';
-import {AiOutlineCalendar} from 'react-icons/ai'
-import {FiUser} from 'react-icons/fi';
 
+import { AiOutlineCalendar } from 'react-icons/ai';
+import { FiUser } from 'react-icons/fi';
+
+import Prismic from '@prismicio/client';
 import { getPrismicClient } from '../services/prismic';
 
 import commonStyles from '../styles/common.module.scss';
 import styles from './home.module.scss';
+import { useState } from 'react';
+import Link from 'next/link';
 
 interface Post {
   uid?: string;
@@ -27,7 +31,24 @@ interface HomeProps {
   postsPagination: PostPagination;
 }
 
-export default function Home() {
+export default function Home({ postsPagination }: HomeProps) {
+  const [results, setResults] = useState(postsPagination.results);
+  const [nextPage, setNextPage] = useState(postsPagination.next_page);
+
+  async function handleNewPosts() {
+    const response = await fetch(nextPage).then(response => response.json());
+
+    const newResults = [...results, ...response.results];
+
+    if (response.next_page) {
+      setNextPage(response.next_page);
+    } else {
+      setNextPage(null);
+    }
+
+    setResults(newResults);
+  }
+
   return (
     <>
       <Head>
@@ -35,43 +56,55 @@ export default function Home() {
       </Head>
       <main className={commonStyles.container}>
         <img className={commonStyles.logo} src="/images/Logo.svg" alt="logo" />
-        <div className={styles.post}>
-          <header className={styles.title}>Como Utilizar Hooks</header>
-          <p className={styles.subtitle}>
-            Pensando em sincronização em ciclos de vida
-          </p>
-          <div className={styles.info}>
-            <span><AiOutlineCalendar/>Data</span><span><FiUser/>Author</span>
+        {results.map(post => (
+          <div className={styles.post} key={post.uid}>
+            <Link href={`/posts/${post.uid}`}>
+              <a>
+                <header className={styles.title}>{post.data.title}</header>
+                <p className={styles.subtitle}>{post.data.subtitle}</p>
+                <div className={styles.info}>
+                  <span>
+                    <AiOutlineCalendar />
+                    {post.first_publication_date}
+                  </span>
+                  <span>
+                    <FiUser />
+                    {post.data.author}
+                  </span>
+                </div>
+              </a>
+            </Link>
           </div>
-        </div>
-        <div className={styles.post}>
-          <header className={styles.title}>Como Utilizar Hooks</header>
-          <p className={styles.subtitle}>
-            Pensando em sincronização em ciclos de vida
-          </p>
-          <div className={styles.info}>
-            <span><AiOutlineCalendar/>Data</span><span><FiUser/>Author</span>
-          </div>
-        </div>
-        <div className={styles.post}>
-          <header className={styles.title}>Como Utilizar Hooks</header>
-          <p className={styles.subtitle}>
-            Pensando em sincronização em ciclos de vida
-          </p>
-          <div className={styles.info}>
-            <span><AiOutlineCalendar/>Data</span><span><FiUser/>Author</span>
-          </div>
-        </div>
+        ))}
 
-        <a className={styles.loadMore}>Carregar mais posts</a>
+        {nextPage ? (
+          <a onClick={handleNewPosts} className={styles.loadMore}>
+            Carregar mais posts
+          </a>
+        ) : null}
       </main>
     </>
   );
 }
 
-// export const getStaticProps = async () => {
-//   // const prismic = getPrismicClient();
-//   // const postsResponse = await prismic.query(TODO);
+export const getStaticProps = async () => {
+  const prismic = getPrismicClient();
+  const postsResponse = await prismic.query(
+    [Prismic.predicates.at('document.type', 'desafio03-bl')],
+    {
+      pageSize: 25,
+    }
+  );
 
-//   // TODO
-// };
+  const next_page = postsResponse.next_page;
+  const results = postsResponse.results;
+
+  return {
+    props: {
+      postsPagination: {
+        results,
+        next_page,
+      },
+    },
+  };
+};
