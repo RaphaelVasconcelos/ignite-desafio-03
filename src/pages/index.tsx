@@ -11,6 +11,10 @@ import commonStyles from '../styles/common.module.scss';
 import styles from './home.module.scss';
 import { useState } from 'react';
 import Link from 'next/link';
+import Header from '../components/Header';
+
+import { format } from 'date-fns';
+import ptBR from 'date-fns/locale/pt-BR';
 
 interface Post {
   uid?: string;
@@ -55,17 +59,23 @@ export default function Home({ postsPagination }: HomeProps) {
         <title>Posts</title>
       </Head>
       <main className={commonStyles.container}>
-        <img className={commonStyles.logo} src="/images/Logo.svg" alt="logo" />
+        <Header />
         {results.map(post => (
           <div className={styles.post} key={post.uid}>
-            <Link href={`/posts/${post.uid}`}>
+            <Link href={`/post/${post.uid}`}>
               <a>
                 <header className={styles.title}>{post.data.title}</header>
                 <p className={styles.subtitle}>{post.data.subtitle}</p>
                 <div className={styles.info}>
                   <span>
                     <AiOutlineCalendar />
-                    {post.first_publication_date}
+                    {format(
+                      new Date(post.first_publication_date),
+                      'dd MMM yyyy',
+                      {
+                        locale: ptBR,
+                      }
+                    )}
                   </span>
                   <span>
                     <FiUser />
@@ -87,7 +97,7 @@ export default function Home({ postsPagination }: HomeProps) {
   );
 }
 
-export const getStaticProps = async () => {
+export const getStaticProps: GetStaticProps = async () => {
   const prismic = getPrismicClient();
   const postsResponse = await prismic.query(
     [Prismic.predicates.at('document.type', 'desafio03-bl')],
