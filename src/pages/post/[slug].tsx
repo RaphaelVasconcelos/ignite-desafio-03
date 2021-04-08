@@ -1,3 +1,4 @@
+
 import { GetStaticPaths, GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
 import Header from '../../components/Header';
@@ -16,6 +17,7 @@ import ptBR from 'date-fns/locale/pt-BR';
 
 import { RichText } from 'prismic-dom';
 import Prismic from '@prismicio/client';
+import Comments from '../../components/Comments';
 
 interface Post {
   uid: string;
@@ -87,7 +89,10 @@ export default function Post({ post }: PostProps) {
             </div>
           ))}
         </main>
+        <hr/>
+        <Comments/>
       </div>
+      
     </>
   );
 }
