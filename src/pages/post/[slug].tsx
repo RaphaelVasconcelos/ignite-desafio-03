@@ -60,30 +60,34 @@ export default function Post({ post }: PostProps) {
   return (
     <>
       <Header />
-      <div>
-        <img
-          src={post.data.banner.url}
-          alt="banner"
-          width="1440"
-          height="400"
-        />
-      </div>
-      <div>{post ? post.data.title : ''}</div>
-      <AiOutlineCalendar />
-      <span>{format( new Date(post.first_publication_date), 'dd MMM yyyy', { locale: ptBR, } )}</span>
-      <FiUser />
-      <span>{post ? post.data.author : ''}</span>
-      <FiClock />
-      <span>{post ? readingTime(post.data.content) : ''}</span>
-      
-      {post?.data?.content?.map(group => (
-        <div key={group.heading}>
-          <h2>{group.heading}</h2>
-          <div
-            dangerouslySetInnerHTML={{ __html: RichText.asHtml(group.body) }}
-          />
+      <div className={commonStyles.container}>
+        <img src={post.data.banner.url} alt="banner" width="700" />
+        <div className={styles.title}>{post ? post.data.title : ''}</div>
+        <div className={styles.info}>
+          <AiOutlineCalendar />
+          <span>
+            {format(new Date(post.first_publication_date), 'dd MMM yyyy', {
+              locale: ptBR,
+            })}
+          </span>
+          <FiUser />
+          <span>{post ? post.data.author : ''}</span>
+          <FiClock />
+          <span>{post ? readingTime(post.data.content) : ''}</span>
         </div>
-      ))}
+        <main className={styles.content}>
+          {post?.data?.content?.map(group => (
+            <div key={group.heading}>
+              <h2>{group.heading}</h2>
+              <div
+                dangerouslySetInnerHTML={{
+                  __html: RichText.asHtml(group.body),
+                }}
+              />
+            </div>
+          ))}
+        </main>
+      </div>
     </>
   );
 }

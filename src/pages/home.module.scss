@@ -3,6 +3,10 @@
     height: 108px;
     padding: 0 2rem;
 
+    + div{
+        margin-top: 2rem;
+    }
+
     .title{
         font-weight: bold;
         font-size: 1.75rem;
@@ -26,7 +30,6 @@
 
     .info{
         height: 20px;
-        width: 263px;
         border-radius: 0px;
         margin-top: 1rem;
         display: flex;
