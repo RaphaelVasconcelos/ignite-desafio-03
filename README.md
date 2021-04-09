@@ -12,3 +12,7 @@ Essa será uma aplicação onde o seu principal objetivo é criar um blog do 
 - Formatação de datas com `date-fns`;
 - Uso de ícones com `react-icons`;
 - Requisições HTTP com `fetch`;
+- Comentários com Utteranc;
+- Preview do documento Prismic;
+- Navegação entre post anterior e próximo;
+- Informação de edição do post.
