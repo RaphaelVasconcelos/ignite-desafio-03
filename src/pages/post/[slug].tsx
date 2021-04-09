@@ -19,6 +19,7 @@ import Prismic from '@prismicio/client';
 import Comments from '../../components/Comments';
 
 import Link from 'next/link';
+import Head  from 'next/head';
 
 interface OtherPost {
   uid: string;
@@ -71,6 +72,9 @@ export default function Post({ post, preview, nextpostuid, prevpostuid }: PostPr
 
   return (
     <>
+      <Head>
+        <title>Enjoy</title>
+      </Head>
       <Header />
       <div className={commonStyles.container}>
         <img src={post.data.banner.url} alt="banner" width="700" />
@@ -188,9 +192,6 @@ export const getStaticProps: GetStaticProps = async ({
 
   const nextpost = nextpostResponse?.results[0] || null;
   const prevpost = prevpostResponse?.results[0] || null;
-
-  console.log(nextpost.uid)
-  console.log(prevpost.uid)
 
   const post: Post = {
     uid: response.uid,
